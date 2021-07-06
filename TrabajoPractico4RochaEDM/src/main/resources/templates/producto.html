@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link th:rel="icon" type=" image/png" th:href="@{/img/logo.png}" />
+<meta charset="UTF-8">
+<title>Producto</title>
+	<link th:rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.5.0/css/bootstrap.min.css}">
+ <script src="https://kit.fontawesome.com/3a8a3eef38.js" crossorigin="anonymous"></script>
+<link th:href="@{/css/styles.css}" rel="stylesheet" type="text/css" href="/static/css/styles.css">
+</head>
+<body class="producto">
+<div th:insert="layout/header :: header"></div>
+
+<div class="container">
+	<h2 class="titulo">Formulario de Carga de Producto</h2>	
+
+	<form id="formProducto" th:object="${unProducto}" th:action="${editMode}?@{/producto/modificar}:@{/producto/guardar}" method="post">
+<div class="form-row formulario">
+		<div class="form-group col-lg-6 col-md-12 col-sm-8 col-xs-12">
+			<label for="nombre"class="form-check-label">Nombre</label> 
+			<input type="text"	id="nombre" th:field="*{nombre}"class="form-control">
+			<div class="alert alert-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">Name	Error</div>
+		</div>
+
+		<div class="form-group col-lg-6 col-md-12 col-sm-8 col-xs-12">
+			<label for="codigo">Codigo</label> 
+			<input type="number"	id="codigo" th:field="*{codigo}"class="form-control">
+			<div class="alert alert-danger" th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}">Name	Error</div>
+		</div>
+
+		<div class="form-group col-lg-6 col-md-12 col-sm-8 col-xs-12">
+            <label for="precio"class="form-check-label">Precio</label> 
+			<input type="number" id="precio" th:field="*{precio}"class="form-control">
+		</div>
+		
+		<div class="form-group col-lg-6 col-md-12 col-sm-8 col-xs-12">
+			<label for="stock"class="form-check-label">Stock</label> 
+			<input type="number" id="stock" th:field="*{stock}"class="form-control">
+		</div>
+		
+		<div class="form-group col-lg-12 col-md-12 col-sm-8 col-xs-12">
+			<label for="marca"class="form-check-label">Marca</label> 
+			<input type="text" id="marca" th:field="*{marca}"class="form-control">		
+		</div>
+
+
+		<div class="form-group col-lg-12 col-md-12 col-sm-8 col-xs-12">
+			<!--<button type="submit" value="Agregar"  class="btn agregar">Agregar <span><i class="far fa-paper-plane"></i></span></button> -->
+			<div class="col-sm-12 col-lg-12">		
+			     <input type="submit" class=" agregar" th:value="${editMode}?'Modificar Producto':'Agregar Producto'">
+			</div>
+		    <div class="col-sm-12 col-lg-12">				
+				<a class="cancelar" th:href="@{'/producto/cancelar'}">Cancelar</a>				
+			</div>
+		
+		</div>
+</div>
+	</form>
+	
+	<h3 class="sub-titulo">Lista de Productos</h3><br>
+			<div class="container">
+				<table  border=1 style="border-collapse:collapse" class="table">
+				
+				    <tr>
+				      <th>Cod Producto</th>
+				      <th>Nombre</th>
+				      <th>Precio</th>
+				      <th>Marca</th>
+				      <th>Stock</th>				      
+				    </tr>
+				       <tr th:if="${productos.empty}">
+				        <td colspan="2">No hay Productos cargados</td>
+				       </tr>
+					<tr th:each="producto : ${productos}">
+						<td th:text="${producto.codigo}"></td>
+						<td th:text="${producto.nombre}"></td>
+						<td th:text="${producto.precio}"></td>
+						<td th:text="${producto.marca}"></td>
+						<td th:text="${producto.stock}"></td>
+						   <td> <a href="#" th:href="@{'/producto/editar/'+${producto.codigo}}">
+					   <i class="fa fa-edit"></i></a>
+					   
+					   <a th:onclick="'javascript:confirmarEliminar(\''+${producto.codigo}+'\');'"><i class="fa fa-trash-alt"></i></a>
+					   </td>
+					   
+					</tr>
+			
+				</table>
+			</div>
+</div>
+
+	
+	
+	
+	<!-- Modal Eliminar-->
+	<div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labellerdby="eliminarModal"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="eliminarModalTitulo">Confirmar Eliminar</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<h6>¿Seguro de que quieres eliminar a este Producto?</h6>
+				</div>
+
+				<input type="hidden" id="identificadorClienteHiddenInput" name="userIdHiddenInput">
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+
+					<button type="button" class="btn btn-primary" th:onclick="eliminarCliente()">Eliminar
+						Producto</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+	<script type="text/javascript">
+		function confirmarEliminar(codigo) {
+			$('#modalEliminar').modal('show');
+			$("#identificadorClienteHiddenInput").val(codigo);
+		}
+
+		function eliminarCliente() {
+			var codigo =
+				$("#identificadorClienteHiddenInput").val();
+			window.location = "eliminarProducto/"+codigo;
+		}
+	</script>
+	
+	
+	<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"
+			type="text/javascript" src="webjars/jquery/3.5.1/jquery.min.js"></script>
+		<script th:src="@{/webjars/popper.js/1.16.0/popper.min.js}"
+			type="text/javascript" src="webjars/popper.js/1.16.0/popper.min.js"></script>
+		<script th:src="@{/webjars/bootstrap/4.5.0/js/bootstrap.min.js}"
+			type="text/javascript"
+			src="webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>	
+
+</body>
+</html>

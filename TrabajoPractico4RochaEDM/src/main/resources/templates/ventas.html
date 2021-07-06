@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link th:rel="icon" type=" image/png" th:href="@{/img/logo.png}" />
+	<meta charset="UTF-8">
+	<title>Inicio</title>
+		<link th:rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.5.0/css/bootstrap.min.css}">
+	<script src="https://kit.fontawesome.com/3a8a3eef38.js" crossorigin="anonymous"></script>
+	<link th:href="@{/css/styles.css}" rel="stylesheet" type="text/css" href="/static/css/styles.css">
+</head>
+<body class="ventase">
+
+<div th:insert="layout/header :: header" ></div>
+	<div class="container">
+		<div class="row col-md-12">
+			<div th:each="c : ${productos}">
+				<div class="col-md-4">
+					<div class="card  carta" style="width: 18rem;">
+						<div class="card-body">
+							<h5 class="card-title" th:text="${'producto - ' + c.codigo}">Id</h5>
+							<p class="card-text" th:text="${c.nombre}">Name</p>
+							<p class="card-text" th:text="${c.precio}">Desc</p>
+							<a class="stretched-link carta-boton btn link-vender" th:href="@{'/producto/vender/'+${c.codigo}}"><i class="fas fa-shopping-cart mr-2"></i>
+								Comprar</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	
+	<!--Modal Editar-->
+		<div class="modal fade" id="modalVender" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-dialog-centered" >
+				<div class="modal-content">
+				
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"
+			type="text/javascript" src="webjars/jquery/3.5.1/jquery.min.js"></script>
+		<script th:src="@{/webjars/popper.js/1.16.0/popper.min.js}"
+			type="text/javascript" src="webjars/popper.js/1.16.0/popper.min.js"></script>
+		<script th:src="@{/webjars/bootstrap/4.5.0/js/bootstrap.min.js}"
+			type="text/javascript"
+			src="webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>	
+<script type="text/javascript">
+			$(document).ready(function() { $(".link-vender").on("click", function(event) {
+									event.preventDefault();
+									$("#modalVender").modal("show").find(".modal-content").load($(this).attr("href"));
+								});
+					});
+		</script>
+</body>
+
+</html>

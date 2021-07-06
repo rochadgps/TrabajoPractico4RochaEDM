@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<link th:rel="icon" type=" image/png" th:href="@{/img/logo.png}" />
+	<meta charset="UTF-8">
+	<title>Carga/Edicion de Clientes</title>
+	<link th:rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.5.0/css/bootstrap.min.css}">
+	<script src="https://kit.fontawesome.com/3a8a3eef38.js" crossorigin="anonymous"></script>
+		
+	<link th:href="@{/css/styles.css}" rel="stylesheet" type="text/css" href="/static/css/styles.css">
+
+</head>
+
+<body class="cliente">
+	<div th:insert="layout/header :: header"></div>
+	<div class="container">
+		<h2 class="titulo">Formulario de Carga de Cliente</h2>
+	<form id="formProducto" th:object="${unCliente}"
+				th:action="${editMode}?@{/cliente/modificar}:@{/cliente/guardar}" method="post">
+		<div class="form-row formulario">
+						
+				<div class="form-group col-lg-12 col-md-12 col-sm-8 col-xs-12">
+				    <input type="hidden" th:field="*{idCliente}"th:if="${editMode}">
+				
+					<label for="nombreA" class="form-check-label">Nombre y Apellido*: </label>
+					<input type="text" id="nombreApellido" th:field="*{nombreApellido}" class="form-control">
+					<div class="alert alert-danger" th:if="${#fields.hasErrors('nombreApellido')}" th:errors="*{nombreApellido}">Name	Error</div>
+				</div>
+				
+				<div class="form-group col-lg-6 col-md-6 col-sm-8 col-xs-12">
+					<label for="fechanac" class="form-check-label">Fecha de Nacimiento: </label>
+					<input type="date" id="fechanac" th:field="*{fechaNacimiento}" class="form-control">
+				</div>
+				
+				<div class="form-group col-lg-6 col-md-6 col-sm-8 col-xs-12">
+				<br><br>
+				<div class="form-check form-check-inline">
+					<input type="radio" name="tipo" value="DNI" id="tipo" th:field="*{tipoDocumento}" class="form-check-input">
+					<label for="tipo" class="form-check-label ">DNI</label>
+				</div>
+			
+				<div class="form-check form-check-inline">	
+				  <input type="radio" name="tipo" value="Pasaporte" id="tipo" th:field="*{tipoDocumento}"	class="form-check-input">
+                  <label for="tipo" class="form-check-label ">Pasaporte </label>
+				</div>
+		</div>
+
+				<div class="form-group col-lg-6 col-md-6 col-sm-8 col-xs-12">
+					<label for="numdoc" class="form-check-label">Nro de Documento*:</label>
+					<input type="number" id="numdoc" th:field="*{nroDocumento}" class="form-control">
+					<div class="alert alert-danger" th:if="${#fields.hasErrors('nroDocumento')}" th:errors="*{nroDocumento}">Name	Error</div>
+				</div>
+
+
+				<div class="form-group col-lg-6 col-md-6 col-sm-8 col-xs-12">
+					<label for="email" class="form-check-label">E-mail*: </label>
+					<input type="email" id="email" th:field="*{email}" class="form-control">
+				</div>
+
+				<div class="form-group col-lg-6 col-md-6 col-sm-8 col-xs-12">
+					<label for="password" class="form-check-label">Contraseña*: </label>
+					<input type="password" id="tipo" th:field="*{password}" class="form-control">
+				</div>
+
+				<div class="form-group col-lg-6 col-md-6 col-sm-8 col-xs-12">
+					<label for="codigo" class="form-label">Codigo de Area: </label>
+					<select id="codigo" th:field="*{codigoAreaTelefono}" class="form-control">
+						<option value="388">388</option>
+						<option value="351">351</option>
+						<option value="11">11</option>
+						<option value="370">370</option>
+					</select>
+				</div>
+
+				<div class="form-group col-lg-6 col-md-6 col-sm-8 col-xs-12">
+					<label for="numtel" class="form-check-label">Telefono: </label>
+					<input type="number" id="numtel" th:field="*{numTelefono}" class="form-control">
+				</div>
+				
+				<div class="form-group col-lg-6 col-md-6 col-sm-8 col-xs-12">
+					<label for="fechaU" class="form-check-label">Fecha de Ultima Compra: </label>
+					<input type="date" id="fechaU" th:field="*{fechaUltimaCompra}" class="form-control">
+				</div>
+
+
+			<div class="form-group  col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+					<!--		<button type="submit" value="Agregar" class="btn agregar">Agregar <span><i class="far fa-paper-plane"></i></span></button>-->
+				 <div class="form-group  col-lg-12  col-sm-12">
+					<input type="submit" class="agregar" th:value="${editMode}?'Modificar Cliente':'Crear Cliente'">
+				 </div>
+			    
+			     <div class="form-group  col-lg-12  col-sm-12 ">				
+				   <a class="cancelar" th:href="@{'/cliente/cancelar'}">Cancelar</a>				
+			    </div>
+			</div>
+				
+		</div>
+			</form>
+	
+		
+
+		<!-- ---------------------------------------------------------------- -->
+
+		<h3 class="sub-titulo">Lista de Clientes</h3>
+		<div style="overflow: hidden">
+			<div style="overflow:scroll">
+				<table class="table">
+					<tr>
+					  <th>ID cliente:</th>
+						<th>Nro Documento:</th>
+						<th>Nombre y Apellido:</th>
+						<th>FechaNac:</th>
+						<th>Edad:</th>
+						<th>Fecha UltimaCompra</th>
+						<th>Tipo Documento:</th>
+						<th>Telefono Completo:</th>
+						<th>E-mail:</th>
+						<th>Datos Adicionales </th>
+					</tr>
+					<tr th:if="${clientes.empty}">
+						<td colspan="2">No hay clientes cargados</td>
+					</tr>
+					<tr th:each="cli : ${clientes}">
+					<td th:text="${cli.getIdCliente}"></td>
+						<td th:text="${cli.nroDocumento}"></td>
+						<td th:text="${cli.nombreApellido}"></td>
+						<td th:text="${cli.fechaNacimiento}"></td>
+						<td th:text="${cli.getEdad}"></td>
+						<td th:text="${cli.fechaUltimaCompra}"></td>
+						<td th:text="${cli.tipoDocumento}"></td>
+						<td th:text="${cli.numTelefonoCompleto}"></td>
+						<td th:text="${cli.email}"></td>
+						<td th:text="${cli.getDatosAdicionales}"></td>
+						<td>
+							<a href="#" th:href="@{'/cliente/editar/'+${cli.getIdCliente}}"> <i
+									class="fa fa-edit"></i></a>
+						
+                            <a th:onclick="'javascript:confirmarEliminar(\''+${cli.getIdCliente}+'\');'"><i class="fa fa-trash-alt"></i></a>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Modal Eliminar-->
+	<div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labellerdby="eliminarModal"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="eliminarModalTitulo">Confirmar Eliminar</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<h6>¿Seguro de que quieres eliminar a este Cliente?</h6>
+				</div>
+
+				<input type="hidden" id="identificadorClienteHiddenInput" name="userIdHiddenInput">
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+					<button type="button" class="btn btn-primary" th:onclick="eliminarCliente()">Eliminar
+						Usuario</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+	<script type="text/javascript">
+		function confirmarEliminar(id) {
+			$('#modalEliminar').modal('show');
+			$("#identificadorClienteHiddenInput").val(id);
+		}
+
+		function eliminarCliente() {
+			var id =
+				$("#identificadorClienteHiddenInput").val();
+			window.location = "eliminarCliente/"+id;
+		}
+	</script>
+
+<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"
+			type="text/javascript" src="webjars/jquery/3.5.1/jquery.min.js"></script>
+		<script th:src="@{/webjars/popper.js/1.16.0/popper.min.js}"
+			type="text/javascript" src="webjars/popper.js/1.16.0/popper.min.js"></script>
+		<script th:src="@{/webjars/bootstrap/4.5.0/js/bootstrap.min.js}"
+			type="text/javascript"
+			src="webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>	
+</body>
+
+</html>
